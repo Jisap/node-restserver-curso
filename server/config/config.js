@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === 'dev') {           // Si el entorno en el que traba
 
 }else{                                          // Sino...
 
-    urlDB = 'mongodb+srv://new-user2021:KyGA7Gr68i9oYdOT@cluster0.rhelh.mongodb.net/Cafe/Clientes'   //la dirección será la de Mongo Atlas DB
+    urlDB = 'mongodb+srv://new-user2021:KyGA7Gr68i9oYdOT@cluster0.rhelh.mongodb.net/Cafe.Clientes'   //la dirección será la de Mongo Atlas DB
 
 }
 
