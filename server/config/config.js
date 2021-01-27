@@ -15,6 +15,19 @@ process.env.PORT = process.env.PORT || 3000;    // Si la variable process.env.PO
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev'; //Si la variable process.env.NODE.ENV no existe supondremos que estamos en desarrollo
 
+// =======================
+//  Vencimiento del token
+// =======================
+// 60 secs, 60 minutos, 24 horas, 30 días
+
+process.env.CADUCIDAD_TOKEN = 60*60*24*30;
+
+// =========================================
+//    Seed  --   Semilla de autenticación
+// =========================================
+                                                                     // Secret - Semilla de autenticación   
+process.env.SEED = process.env.SEED || 'este-es-el-seed-desarrollo'; // Si la variable process.env.SEED no esta definida en heroku usaremos 
+                                                                     // la que esta aquí definida   
 // ===============
 //  Base de datos
 // ===============
@@ -27,7 +40,7 @@ if (process.env.NODE_ENV === 'dev') {           // Si el entorno en el que traba
 
 }else{                                          // Sino...
 
-    urlDB = process.env.MONGO_URI;              //la dirección será la de Mongo Atlas DB --> heroku config --> MONGO_URI
+    urlDB = process.env.MONGO_URI;              //la dirección será la de Mongo Atlas DB --> heroku config --> MONGO_URIgit
 
 }
 

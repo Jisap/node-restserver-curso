@@ -21,8 +21,9 @@ app.use(bodyParser.urlencoded({ extended: false }));     //texto sin formato o s
 // parse application/json
 app.use(bodyParser.json());                              //Lo que venga por argumentos se convierten a JSON (req->body) 
 
+// Configuración global de rutas
+app.use(require('./routes/index.js'));                   //Importamos y usamos las rutas del usuario
 
-app.use(require('./routes/usuario'));                    //Importamos y usamos las rutas del usuario
 
 mongoose.connect(process.env.URLDB, {  // Conexion a moongodb en la base de datos cafe
             useNewUrlParser: true,

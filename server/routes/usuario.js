@@ -3,6 +3,7 @@
 const express = require('express');
 const app = express();
 const Usuario = require('../models/usuario');  // Usuario Esquema es un objeto JSON que permite definir la forma y el contenido de documentos incrustados en una colección. 
+const { verificaToken, verificaAdmin_Role } = require('../middlewares/autenticacion');
 const bcrypt = require('bcrypt'); 
 const _= require('underscore');
 
@@ -13,14 +14,16 @@ const _= require('underscore');
 //req.body   : Provienen de una publicación de un formulario
 
 
-app.get('/usuario', function (req, res) {      // Cuando el path sea un '/usuario' la respuesta del server express será 'get Usuario'
-  //res.json('get Usuario')                    // El método GET  solicita una representación de un recurso específico. 
-                                               // Las peticiones que usan el método GET sólo deben recuperar datos. 
+app.get('/usuario', verificaToken ,(req, res) => {  // Cuando el path sea un '/usuario' la respuesta del server express será 'get Usuario'
+  //res.json('get Usuario')                         // El método GET  solicita una representación de un recurso específico. 
+                                                    // Las peticiones que usan el método GET sólo deben recuperar datos. 
 
-    let desde = req.query.desde || 0;          // La petición puede tener parámetros opcionales(desde = donde comienza a mostrar), sino los lleva desde=0)
+                                                    // verificaToken permitirá ejecutar el get si el token existe en la bd
+    
+    let desde = req.query.desde || 0;               // La petición puede tener parámetros opcionales(desde = donde comienza a mostrar), sino los lleva desde=0)
     desde=Number(desde);
 
-    let limite = req.query.limite || 5;        // Limite es otro parámetro opcional 
+    let limite = req.query.limite || 5;             // Limite es otro parámetro opcional 
     limite = Number(limite);
 
             //cond busqueda     //campos o prop queremos mostrar
@@ -36,7 +39,7 @@ app.get('/usuario', function (req, res) {      // Cuando el path sea un '/usuari
                     });
                 }
                             //cond busqueda
-                Usuario.count({estado:true}, (err, conteo)=>{  // Usando el esquema Usuario mogoose contará cuantos registros
+                Usuario.countDocuments({estado:true}, (err, conteo)=>{  // Usando el esquema Usuario mogoose contará cuantos registros
                                                                // han cumplido las condiciones anteriores
                     res.json({
                         ok: true,
@@ -47,7 +50,8 @@ app.get('/usuario', function (req, res) {      // Cuando el path sea un '/usuari
             })
 });
 
-app.post('/usuario', function (req, res){       // Lo mismo pero con una petición post (se utiliza para enviar una entidad a un recurso en específico, 
+app.post('/usuario', [verificaToken, verificaAdmin_Role],function (req, res){ 
+                                                // Lo mismo pero con una petición post (se utiliza para enviar una entidad a un recurso en específico, 
                                                 // causando a menudo un cambio en el estado o efectos secundarios en el servidor)
     let body = req.body;                        
                //args                           // body contiene todos los argumentos de la petición al server       
@@ -79,7 +83,7 @@ app.post('/usuario', function (req, res){       // Lo mismo pero con una petici�
 });
 
 
-app.put('/usuario/:id', function (req, res) {   // Put se utiliza para actualizar registros, en este caso según id
+app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], function (req, res) {   // Put se utiliza para actualizar registros, en este caso según id
   
     let id = req.params.id;                                                  // Obtenemos del parámetro del Id
     let body = _.pick(req.body,['nombre','email','img','role','estado']);    // Obtenemos todos los args del formulario pasados al req (petición) 
@@ -106,7 +110,7 @@ app.put('/usuario/:id', function (req, res) {   // Put se utiliza para actualiza
     })
 });
 
-app.delete('/usuario/:id', function (req, res) {             // delete cambia el estado de algo para que no este disponible
+app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role],function (req, res) { // delete cambia el estado de algo para que no este disponible
  
     let id= req.params.id;                                   // Identificamos el id de los parámetros
 
