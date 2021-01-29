@@ -10,7 +10,7 @@ const express = require('express');              // Requerimos el paquete expres
 const app = express();                           // Lo metemos en una constante app
 const bodyParser = require('body-parser');       // Requerimos el paquete body-parser
 const mongoose = require('mongoose');            // Requerimos el paquete mongoose pra trabajar con mongodb 
-
+const path = require('path');                    // Requerimos el paquete path para obtener las rutas a directorios
 
 
 // parse application/x-www-form-urlencoded               //Básicamente, es un middleware para analizar JSON,  
@@ -23,6 +23,9 @@ app.use(bodyParser.json());                              //Lo que venga por argu
 
 // Configuración global de rutas
 app.use(require('./routes/index.js'));                   //Importamos y usamos las rutas del usuario
+
+// Habilitar la carpeta public
+app.use(express.static(path.resolve(__dirname, '../public')));  // Con la función path obtenemos la ruta al directorio public
 
 
 mongoose.connect(process.env.URLDB, {  // Conexion a moongodb en la base de datos cafe

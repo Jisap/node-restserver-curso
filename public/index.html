@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sign-In Demo</title>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="170305983302-kl47vn7e5n4nse5bei27dankkvr2prbi.apps.googleusercontent.com">
+</head>
+<body>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    
+    <a href="#" onclick="signOut();">Sign out</a>       <!--Logueo-->
+    <script>
+        function signOut() {                            // Deslogueo
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+            });
+        }
+    </script>
+    
+    
+    <script>
+        function onSignIn(googleUser) {                                                     //Logeo con una cta de google                                       
+                var profile = googleUser.getBasicProfile();
+                console.log('ID: ' + profile.getId());                                      // Mostramos información del usuario logueado
+                console.log('Name: ' + profile.getName());
+                console.log('Image URL: ' + profile.getImageUrl());
+                console.log('Email: ' + profile.getEmail());
+            
+                var id_token = googleUser.getAuthResponse().id_token;                       // Token generado por google en base a googleUser
+                console.log(id_token);
+
+                var xhr = new XMLHttpRequest();                                             // Instancia de petición al server                          
+                xhr.open('POST', '/google');                                                // Petición post a nuestro server según ruta definida para logueo
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onload = function () {
+                console.log('Signed in as: ' + xhr.responseText);
+            };
+            xhr.send('idtoken=' + id_token);                                                // Enviamos el token generado por google a nuestro server
+            
+        }
+    </script>
+</body>
+</html>
