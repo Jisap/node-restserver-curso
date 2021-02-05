@@ -53,6 +53,7 @@ app.post('/login', (req, res) => { // Cuando pongamos en el pathname /login envi
                 usuario: usuarioDB,
                 token
             });
+
     });
 });
 
@@ -156,13 +157,6 @@ app.post('/google', async(req, res) => {        // Ruta para autenticación con 
     //     usuario: googleUser
     // });
 });
-
-
-
-
-
-
-
 
 
 
